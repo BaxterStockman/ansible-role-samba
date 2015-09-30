@@ -1,2 +1,23 @@
 ---
 # tasks file for samba
+
+# Install packages
+- include: pacman.yml
+  when: ansible_pkg_mgr == 'pacman'
+  tags:
+    - samba
+    - pacman
+
+# Configure smb.conf
+- include: config.yml
+  tags:
+    - samba
+    - config
+
+# Add samba users
+
+# Restart samba services
+- include: service.yml
+  tags:
+    - samba
+    - service
