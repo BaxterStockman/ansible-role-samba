@@ -3,7 +3,7 @@
 samba_user: root
 samba_group: root
 
-samba_config_dest: '/etc/samba/smbd.conf'
+samba_config_dest: '/etc/samba/smb.conf'
 
 smbd_service_name: smbd
 nmbd_service_name: nmbd

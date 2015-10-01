@@ -1,38 +1,27 @@
 ---
-# handlers file for samba
-- name: restart services
-  debug:
-    msg: restarting services
-  notify:
-    - restart nmbd service
-    - restart smbd service
-  changed_when: true
-  when: samba_restart_services | default('yes') | bool
-  tags:
-    - samba
-    - service
-
-- name: restart nmbd service
+- name: configure nmbd service
   service:
     arguments: "{{ nmbd_service_arguments | default(omit) }}"
+    enabled: "{{ nmbd_service_enabled | default(omit) | bool }}"
     name: "{{ nmbd_service_name }}"
     pattern: "{{ nmbd_service_pattern | default(omit) }}"
     runlevel: "{{ nmbd_service_runlevel | default(omit) }}"
     sleep: "{{ nmbd_service_sleep | default(omit) }}"
-    state: restarted
+    state: "{{ nmbd_service_state | default(omit) }}"
   become: yes
   tags:
     - samba
     - service
 
-- name: restart smbd service
+- name: configure smbd service
   service:
     arguments: "{{ smbd_service_arguments | default(omit) }}"
+    enabled: "{{ smbd_service_enabled | default(omit) | bool }}"
     name: "{{ smbd_service_name }}"
     pattern: "{{ smbd_service_pattern | default(omit) }}"
     runlevel: "{{ smbd_service_runlevel | default(omit) }}"
     sleep: "{{ smbd_service_sleep | default(omit) }}"
-    state: restarted
+    state: "{{ smbd_service_state | default(omit) }}"
   become: yes
   tags:
     - samba

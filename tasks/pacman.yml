@@ -1,0 +1,10 @@
+---
+- name: install samba
+  pacman:
+    name: samba
+    state: "{{ samba_pkg_install_latest | default('no') | ternary('latest', 'present') }}"
+    update_cache: yes
+  become: yes
+  tags:
+    - samba
+    - pacman

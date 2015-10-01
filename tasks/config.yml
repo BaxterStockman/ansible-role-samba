@@ -1,0 +1,110 @@
+---
+- name: get stat of smb.conf
+  stat:
+    follow: "{{ samba_config_follow | default(omit) }}"
+    get_checksum: "{{ samba_config_get_checksum | default(omit) }}"
+    get_md5: "{{ samba_config_get_md5 | default(omit)  }}"
+    path: "{{ samba_config_dest }}"
+  register: samba_config_dest_st
+  tags:
+    - samba
+    - config
+
+- name: get stat of default smb.conf
+  stat:
+    follow: "{{ samba_config_follow | default(omit) }}"
+    get_checksum: "{{ samba_config_get_checksum | default(omit) }}"
+    get_md5: "{{ samba_config_get_md5 | default(omit)  }}"
+    path: "{{ samba_config_dest }}.default"
+  register: samba_config_dest_default_st
+  tags:
+    - samba
+    - config
+
+- name: move default smb.conf into place
+  command: "cp {{ samba_config_dest }}.default {{ samba_config_dest }} creates={{ samba_config_dest }}"
+  when: >
+    (not samba_config_dest_st.stat.exists) and samba_config_dest_default_st.stat.exists
+  tags:
+    - samba
+    - config
+
+- name: assemble smb.conf from fragments
+  assemble:
+    backup: "{{ samba_config_backup | default(omit) }}"
+    delimiter: "{{ samba_config_delimiter | default(omit) }}"
+    dest: "{{ samba_config_dest }}"
+    follow: "{{ samba_config_follow | default(omit) }}"
+    group: "{{ samba_config_group | default(omit) }}"
+    mode: "{{ samba_config_mode | default(omit) }}"
+    owner: "{{ samba_config_owner | default(omit) }}"
+    regexp: "{{ samba_config_regexp | default(omit) }}"
+    remote_src: "{{ samba_config_remote_src | default(omit) }}"
+    selevel: "{{ samba_config_selevel | default(omit) }}"
+    serole: "{{ samba_config_serole | default(omit) }}"
+    setype: "{{ samba_config_setype | default(omit) }}"
+    seuser: "{{ samba_config_seuser | default(omit) }}"
+    src: "{{ samba_config_src }}"
+  when: samba_use_assemble | default('no') | bool
+  notify:
+    - restart services
+  tags:
+    - samba
+    - config
+
+- name: template smb.conf
+  template:
+    backup: "{{ samba_config_backup | default(omit) }}"
+    dest: "{{ samba_config_dest }}"
+    follow: "{{ samba_config_follow | default(omit) }}"
+    group: "{{ samba_config_group | default(omit) }}"
+    mode: "{{ samba_config_mode | default(omit) }}"
+    owner: "{{ samba_config_owner | default(omit) }}"
+    regexp: "{{ samba_config_regexp | default(omit) }}"
+    remote_src: "{{ samba_config_remote_src | default(omit) }}"
+    selevel: "{{ samba_config_selevel | default(omit) }}"
+    serole: "{{ samba_config_serole | default(omit) }}"
+    setype: "{{ samba_config_setype | default(omit) }}"
+    seuser: "{{ samba_config_seuser | default(omit) }}"
+    src: "{{ samba_config_src }}"
+    validate: "{{ samba_config_validate | default(omit) }}"
+  when: samba_use_template | default('no') | bool
+  notify:
+    - restart services
+  tags:
+    - samba
+    - config
+
+- name: copy smb.conf to remote host
+  copy:
+    backup: "{{ samba_config_backup | default(omit) }}"
+    content: "{{ samba_config_content | default(omit) }}"
+    dest: "{{ samba_config_dest }}"
+    follow: "{{ samba_config_follow | default(omit) }}"
+    group: "{{ samba_config_group | default(omit) }}"
+    mode: "{{ samba_config_mode | default(omit) }}"
+    owner: "{{ samba_config_owner | default(omit) }}"
+    regexp: "{{ samba_config_regexp | default(omit) }}"
+    remote_src: "{{ samba_config_remote_src | default(omit) }}"
+    selevel: "{{ samba_config_selevel | default(omit) }}"
+    serole: "{{ samba_config_serole | default(omit) }}"
+    setype: "{{ samba_config_setype | default(omit) }}"
+    seuser: "{{ samba_config_seuser | default(omit) }}"
+    src: "{{ samba_config_src }}"
+    validate: "{{ samba_config_validate | default(omit) }}"
+  when: samba_use_copy | default('no') | bool
+  notify:
+    - restart services
+  tags:
+    - samba
+    - config
+
+- name: tweak settings in smb.conf
+  debug:
+    msg: pass
+  changed_when: yes
+  notify:
+    - restart services
+  tags:
+    - samba
+    - config

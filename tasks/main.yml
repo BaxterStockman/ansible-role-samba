@@ -15,6 +15,10 @@
     - config
 
 # Add samba users
+#- include: user.yml
+#  tags:
+#    - samba
+#    - user
 
 # Restart samba services
 - include: service.yml
