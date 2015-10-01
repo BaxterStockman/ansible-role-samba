@@ -8,7 +8,6 @@
     runlevel: "{{ nmbd_service_runlevel | default(omit) }}"
     sleep: "{{ nmbd_service_sleep | default(omit) }}"
     state: "{{ nmbd_service_state | default(omit) }}"
-  become: yes
   tags:
     - samba
     - service
@@ -22,7 +21,6 @@
     runlevel: "{{ smbd_service_runlevel | default(omit) }}"
     sleep: "{{ smbd_service_sleep | default(omit) }}"
     state: "{{ smbd_service_state | default(omit) }}"
-  become: yes
   tags:
     - samba
     - service
