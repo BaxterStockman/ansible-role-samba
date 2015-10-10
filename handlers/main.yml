@@ -19,7 +19,7 @@
     pattern: "{{ nmbd_service_pattern | default(omit) }}"
     runlevel: "{{ nmbd_service_runlevel | default(omit) }}"
     sleep: "{{ nmbd_service_sleep | default(omit) }}"
-    state: restarted
+    state: "{{ nmbd_service_state }}"
   tags:
     - samba
     - service
@@ -31,7 +31,7 @@
     pattern: "{{ smbd_service_pattern | default(omit) }}"
     runlevel: "{{ smbd_service_runlevel | default(omit) }}"
     sleep: "{{ smbd_service_sleep | default(omit) }}"
-    state: restarted
+    state: "{{ smbd_service_state }}"
   tags:
     - samba
     - service
