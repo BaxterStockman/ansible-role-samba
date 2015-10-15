@@ -1,6 +1,6 @@
 ---
 - name: install samba
-  pacman:
+  apt:
     name: "{{ item }}"
     state: "{{ samba_pkg_install_latest | default('no') | ternary('latest', 'present') }}"
     update_cache: yes
@@ -8,4 +8,4 @@
   tags:
     - samba
     - pkg
-    - pacman
+    - apt

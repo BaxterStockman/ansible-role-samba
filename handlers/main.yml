@@ -1,13 +1,25 @@
 ---
 # handlers file for samba
-- name: restart services
+- name: check smb.conf
+  stat:
+    follow: "{{ samba_config_follow | default(omit) }}"
+    get_checksum: yes
+    path: "{{ samba_config_dest }}"
+  register: samba_config_st_post
+  changed_when: true
+  notify:
+    - compare smb.conf checksums
+  tags:
+    - samba
+    - service
+
+- name: compare smb.conf checksums
   debug:
-    msg: restarting services
+    msg: Triggering service restarts if smb.conf has changed
+  changed_when: samba_config_st_pre.stat.checksum != samba_config_st_post.stat.checksum
   notify:
     - restart nmbd service
     - restart smbd service
-  changed_when: true
-  when: samba_restart_services | default('yes') | bool
   tags:
     - samba
     - service
@@ -19,7 +31,8 @@
     pattern: "{{ nmbd_service_pattern | default(omit) }}"
     runlevel: "{{ nmbd_service_runlevel | default(omit) }}"
     sleep: "{{ nmbd_service_sleep | default(omit) }}"
-    state: "{{ nmbd_service_state }}"
+    state: restarted
+  when: nmbd_service_enabled | default('no') | bool
   tags:
     - samba
     - service
@@ -31,7 +44,8 @@
     pattern: "{{ smbd_service_pattern | default(omit) }}"
     runlevel: "{{ smbd_service_runlevel | default(omit) }}"
     sleep: "{{ smbd_service_sleep | default(omit) }}"
-    state: "{{ smbd_service_state }}"
+    state: restarted
+  when: smbd_service_enabled | default('no') | bool
   tags:
     - samba
     - service

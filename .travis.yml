@@ -28,8 +28,10 @@ script:
     - "ansible-playbook -l travis test/$SITE"
 
     # Run the role/playbook again, checking for idempotence
+    # Allow for 2 changes, since the checksum verification tasks are always
+    # marked as changed in order to trigger handlers.
     - >
-        if ansible-playbook -l travis test/$SITE | grep -q "changed=0.*failed=0"; then
+        if ansible-playbook -l travis test/$SITE | grep -q "changed=2.*failed=0"; then
             echo "Idempotence test: pass"
             exit 0
         else

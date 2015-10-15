@@ -7,7 +7,7 @@ samba_config_dest: '/etc/samba/smb.conf'
 
 smbd_service_name: smbd
 nmbd_service_name: nmbd
-smbd_service_enabled: yes
-nmbd_service_enabled: yes
+smbd_service_enabled: no
+nmbd_service_enabled: no
 
 samba_users: {}

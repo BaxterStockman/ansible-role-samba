@@ -3,3 +3,19 @@
   roles:
     - role: samba
       become: yes
+  tasks:
+    - name: strip leading whitespace from smb.conf
+      replace:
+        dest: "{{ samba_config_dest }}"
+      # Limit replacement to `option = value` lines with leading whitespace
+        regexp: '^\s+(.+=.+)'
+        replace: '\1'
+      become: yes
+    - name: twiddle smb.conf
+      ini_file:
+        dest: "{{ samba_config_dest }}"
+        section: printers
+        backup: yes
+        option: comment
+        value: 'Very little'
+      become: yes
