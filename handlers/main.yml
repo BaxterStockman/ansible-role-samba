@@ -1,6 +1,6 @@
 ---
 # handlers file for samba
-- name: check smb.conf
+- name: get post-run stat of smb.conf
   stat:
     follow: "{{ samba_config_follow | default(omit) }}"
     get_checksum: yes
@@ -24,6 +24,16 @@
     - samba
     - service
 
+- name: restart samba services
+  debug: restart samba services
+  changed_when: true
+  notify:
+    - restart nmbd service
+    - restart smbd service
+  tags:
+    - samba
+    - service
+
 - name: restart nmbd service
   service:
     arguments: "{{ nmbd_service_arguments | default(omit) }}"
@@ -32,7 +42,7 @@
     runlevel: "{{ nmbd_service_runlevel | default(omit) }}"
     sleep: "{{ nmbd_service_sleep | default(omit) }}"
     state: restarted
-  when: nmbd_service_enabled | default('no') | bool
+  when: samba_service_enabled | default('no') | bool
   tags:
     - samba
     - service
@@ -45,7 +55,7 @@
     runlevel: "{{ smbd_service_runlevel | default(omit) }}"
     sleep: "{{ smbd_service_sleep | default(omit) }}"
     state: restarted
-  when: smbd_service_enabled | default('no') | bool
+  when: samba_service_enabled | default('no') | bool
   tags:
     - samba
     - service

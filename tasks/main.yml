@@ -20,7 +20,14 @@
   tags:
     - samba
     - pkg
-    - pacman
+    - apt
+
+- include: yum.yml
+  when: ansible_pkg_mgr == 'yum'
+  tags:
+    - samba
+    - pkg
+    - yum
 
 # Move default smb.conf into place, if needed.  Also get initial checksum for
 # later comparison when handlers fire.
@@ -29,8 +36,29 @@
     - samba
     - config
 
+- name: get pre-run stat of smb.conf
+  stat:
+    follow: "{{ samba_config_follow | default(omit) }}"
+    get_checksum: "{{ samba_config_get_checksum | default(omit) }}"
+    get_md5: "{{ samba_config_get_md5 | default(omit)  }}"
+    path: "{{ samba_config_dest }}"
+  register: samba_config_st_pre
+  when: samba_services_restarted_on_change | bool
+  changed_when: samba_services_restarted_on_change | bool
+  notify: get post-run stat of smb.conf
+  tags:
+    - samba
+    - config
+    - service
+
 # Restart samba services
 - include: service.yml
   tags:
     - samba
     - service
+
+- name: notify samba services restart handler
+  debug: notify samba services restart handler
+  when: samba_services_restarted | bool
+  changed_when: samba_services_restarted | bool
+  notify: restart samba services

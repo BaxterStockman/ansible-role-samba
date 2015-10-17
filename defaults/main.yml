@@ -11,3 +11,6 @@ smbd_service_enabled: no
 nmbd_service_enabled: no
 
 samba_users: {}
+
+samba_service_restarted_on_change: no
+samba_service_restarted: no
