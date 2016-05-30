@@ -1,6 +1,8 @@
 Ansible Role: samba
 ===================
 
+[![Build Status](https://travis-ci.org/BaxterStockman/ansible-role-samba.svg?branch=master)](https://travis-ci.org/BaxterStockman/ansible-role-samba)
+
 An Ansible role for managing a Samba server installation
 
 Role Variables
