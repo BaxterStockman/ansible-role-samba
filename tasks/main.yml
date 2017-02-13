@@ -1,11 +1,26 @@
 ---
 # tasks file for samba
+- include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_pkg_mgr }}.yml"
+      skip: yes
+  tags:
+    - always
 
 - include_vars: "{{ item }}"
   with_first_found:
-    - "{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}.yml"
-    - "{{ ansible_pkg_mgr }}.yml"
+    - files:
+        - "{{ ansible_os_family }}.yml"
+      skip: yes
+  tags:
+    - always
+
+- include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}.yml"
+      skip: yes
   tags:
     - always
 
@@ -20,14 +35,14 @@
   when: ansible_pkg_mgr == 'apt'
   tags:
     - samba
-    - pkg
+    - package
     - apt
 
 - include: yum.yml
   when: ansible_pkg_mgr == 'yum'
   tags:
     - samba
-    - pkg
+    - package
     - yum
 
 # Move default smb.conf into place, if needed.  Also get initial checksum for
@@ -59,7 +74,8 @@
     - service
 
 - name: notify samba services restart handler
-  debug: notify samba services restart handler
+  debug:
+    msg: notifying samba services restart handler
   when: samba_services_restarted | bool
   changed_when: samba_services_restarted | bool
   notify: restart samba services

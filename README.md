@@ -1,5 +1,4 @@
-Ansible Role: samba
-===================
+# Ansible Role - Samba
 
 [![Build Status](https://travis-ci.org/BaxterStockman/ansible-role-samba.svg?branch=master)](https://travis-ci.org/BaxterStockman/ansible-role-samba)
 
@@ -46,8 +45,8 @@ Please see [`test/playbook.yml`](test/playbook.yml) for example usage.
 Notes
 -----
 
-At least on Arch Linux with Python 2.7.10, the `ini_file` (actually, the
-`ConfigParser` library that's being used under the hood) module doesn't like
+At least on Arch Linux with Python 2.7.10, the `ini_file` module (actually, the
+`ConfigParser` library that's being used under the hood) doesn't like
 the default `smb.conf` due to leading whitespace before `option = value` pairs.
 If you want to use `ini_file` to twiddle your Samba settings, you'll need to
 strip the leading whitespace first.  Here's a suggestion:

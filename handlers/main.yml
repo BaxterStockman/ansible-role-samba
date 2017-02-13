@@ -25,7 +25,8 @@
     - service
 
 - name: restart samba services
-  debug: restart samba services
+  debug:
+    msg: restarting samba services
   changed_when: true
   notify:
     - restart nmbd service
